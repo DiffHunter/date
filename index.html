@@ -74,7 +74,6 @@
             background-color: #c0392b;
         }
 
-        /* Styl pro zónu kalendáře */
         .datepicker-box {
             display: flex;
             flex-direction: column;
@@ -90,7 +89,6 @@
             margin: 0;
         }
 
-        /* Klíčový styl pro pole s datem */
         input[type="date"] {
             border: 2px solid #ffc2d1;
             border-radius: 12px;
@@ -125,6 +123,17 @@
             background-color: #ccc;
             box-shadow: none;
             cursor: not-allowed;
+        }
+
+        .screenshot-note {
+            font-size: 1.1rem;
+            color: #666;
+            margin-top: 20px;
+            background-color: #fff0f3;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px dashed #ff477e;
+            animation: pop 0.5s ease 0.3s backwards;
         }
 
         @keyframes pop {
@@ -195,6 +204,7 @@
             `;
         }
 
+        // Kontrola, zda vybrala datum
         function checkDate() {
             const dateInput = document.getElementById('dateInput');
             const btnSubmit = document.getElementById('btnSubmitDate');
@@ -206,6 +216,7 @@
             }
         }
 
+        // Závěrečná zpráva se screenshotem
         function confirmFinalDate() {
             const container = document.getElementById('quizContainer');
             const selectedDateValue = document.getElementById('dateInput').value;
@@ -214,9 +225,12 @@
             const formattedDate = `${dateParts[2]}. ${dateParts[1]}. ${dateParts[0]}`;
 
             container.innerHTML = `
-                <h2 style="color: #ff477e; font-size: 2rem; margin: 0; line-height: 1.4;">
+                <h2 style="color: #ff477e; font-size: 2.2rem; margin: 0; line-height: 1.4;">
                     Super, platí! Už se na naše date ${formattedDate} moc těším. 🥰👋
                 </h2>
+                <div class="screenshot-note">
+                    <strong>Udělej teď prosím screenshot</strong> této obrazovky a pošli mi ho na Insta, ať si to můžu zapsat do kalendáře! 📸✨
+                </div>
             `;
         }
     </script>
