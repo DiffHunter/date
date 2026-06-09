@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Půjdeš semnou? 🤭</title>
+    <title>Generátor příměří 🕊️</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -28,10 +28,18 @@
             transition: all 0.3s ease;
         }
 
-        h1, h2 {
+        h1 {
             color: #ff477e;
+            margin-bottom: 20px;
+            font-size: 2rem;
+            line-height: 1.3;
+        }
+
+        p {
+            color: #555;
+            font-size: 1.1rem;
+            line-height: 1.5;
             margin-bottom: 25px;
-            font-size: 2.2rem;
         }
 
         .buttons {
@@ -40,17 +48,28 @@
             align-items: center;
             gap: 20px;
             flex-wrap: wrap;
-            min-height: 150px;
+            min-height: 60px;
         }
 
         button {
-            padding: 15px 35px;
-            font-size: 1.2rem;
+            padding: 12px 30px;
+            font-size: 1.1rem;
             font-weight: bold;
             border: none;
             border-radius: 50px;
             cursor: pointer;
             transition: all 0.2s ease;
+        }
+
+        #btnNext {
+            background-color: #ff477e;
+            color: white;
+            box-shadow: 0 5px 15px rgba(255, 71, 126, 0.4);
+        }
+
+        #btnNext:hover {
+            transform: scale(1.05);
+            background-color: #e03e6f;
         }
 
         #btnYes {
@@ -68,25 +87,16 @@
             background-color: #e74c3c;
             color: white;
             box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+            transition: left 0.15s ease, top 0.15s ease, transform 0.2s ease;
         }
 
-        #btnNo:hover {
-            background-color: #c0392b;
-        }
-
+        /* Nové styly pro kalendář v usmireni.html */
         .datepicker-box {
             display: flex;
             flex-direction: column;
             gap: 20px;
             align-items: center;
             animation: pop 0.5s ease;
-        }
-
-        .datepicker-instruction {
-            font-size: 1.2rem;
-            color: #ff477e;
-            font-weight: bold;
-            margin: 0;
         }
 
         input[type="date"] {
@@ -115,7 +125,7 @@
             padding: 12px 40px;
             font-size: 1.1rem;
             width: 100%;
-            border-radius: 10px;
+            border-radius: 50px;
             box-shadow: 0 5px 15px rgba(255, 71, 126, 0.3);
         }
 
@@ -136,6 +146,10 @@
             animation: pop 0.5s ease 0.3s backwards;
         }
 
+        .animate-box {
+            animation: pop 0.5s ease;
+        }
+
         @keyframes pop {
             0% { transform: scale(0.6); opacity: 0; }
             100% { transform: scale(1); opacity: 1; }
@@ -144,52 +158,86 @@
 </head>
 <body>
 
-    <div class="container" id="quizContainer">
-        <h1 id="question">Půjdeš se mnou na date? 🤭</h1>
-        <div class="buttons">
-            <button id="btnYes" onclick="sayYes()">ANO</button>
-            <button id="btnNo" onclick="sayNo()">NE</button>
+    <div class="container" id="mainContainer">
+        <!-- FÁZE 1: Úvodní hláška a tlačítko Dále -->
+        <div id="phase1" class="animate-box">
+            <h1>Dokážou se Pinďa a Juicy Vanilka vrátit k tomu hezkému?🌸✨</h1>
+            <div class="buttons">
+                <button id="btnNext" onclick="goToPhase2()">Dále ➡️</button>
+            </div>
         </div>
     </div>
 
     <script>
-        let clickCount = 0;
-        let yesSize = 1.2;
-        let yesPaddingX = 35;
-        let yesPaddingY = 15;
-
-        const noTexts = [
-            "To jako vážně? 😢",
-            "Opravdu ne? Rozmysli si to! 🤔",
-            "Ty mě nemáš ráda? Zkus to znovu! 🥺",
-            "Poslední šance vzít to zpět! 💔",
-            "Jak chceš no 😭"
-        ];
-
-        function sayNo() {
-            clickCount++;
-            const btnYes = document.getElementById('btnYes');
-            const btnNo = document.getElementById('btnNo');
-
-            if (clickCount <= 5) {
-                yesSize += 0.4;
-                yesPaddingX += 15;
-                yesPaddingY += 8;
-                
-                btnYes.style.fontSize = yesSize + "rem";
-                btnYes.style.padding = `${yesPaddingY}px ${yesPaddingX}px`;
-
-                if (clickCount <= noTexts.length) {
-                    btnNo.innerText = noTexts[clickCount - 1];
-                }
-            } else {
-                btnNo.style.display = 'none';
-            }
+        function goToPhase2() {
+            const container = document.getElementById('mainContainer');
+            container.innerHTML = `
+                <div id="phase2" class="animate-box">
+                    <p style="margin-top: 10px;">Doufám, že ti čas, který jsi potřebovala pro sebe, pomohl. Mrzí mě, že mezi námi vznikla taková situace😔. Nechci se hádat ani se vracet k výčitkám... Rád bych tě znovu viděl.😁 Budu rád, když spolu zajdeme na kafe. Co ty na to?</p>
+                    <div class="buttons">
+                        <button id="btnYes" onclick="acceptPeace()">ANO, beru ☕</button>
+                        <button id="btnNo" onmouseover="moveButton()" onclick="moveButton()">NE 😤</button>
+                    </div>
+                </div>
+            `;
         }
 
-        function sayYes() {
-            const container = document.getElementById('quizContainer');
+        // Šílené létání všude možně s ochranou proti překrytí (přesně tvoje funkční verze)
+        function moveButton() {
+            const btnNo = document.getElementById('btnNo');
+            const btnYes = document.getElementById('btnYes');
             
+            if (!btnYes) return;
+            
+            btnNo.style.position = 'fixed';
+            
+            const yesRect = btnYes.getBoundingClientRect();
+            
+            const btnWidth = btnNo.clientWidth;
+            const btnHeight = btnNo.clientHeight;
+            
+            let randomX, randomY;
+            let isOverlapping = true;
+            let safetyBuffer = 40; 
+            
+            while (isOverlapping) {
+                randomX = Math.floor(Math.random() * (window.innerWidth - btnWidth));
+                randomY = Math.floor(Math.random() * (window.innerHeight - btnHeight));
+                
+                if (
+                    randomX + btnWidth < yesRect.left - safetyBuffer || 
+                    randomX > yesRect.right + safetyBuffer ||          
+                    randomY + btnHeight < yesRect.top - safetyBuffer ||  
+                    randomY > yesRect.bottom + safetyBuffer             
+                ) {
+                    isOverlapping = false; 
+                }
+            }
+            
+            btnNo.style.left = randomX + 'px';
+            btnNo.style.top = randomY + 'px';
+            
+            // Náhodné texty (přidána tvoje nová hláška)
+            const texts = [
+                "Tato možnost vypršela! 😜", 
+                "Zkus kliknout vedle! 👇", 
+                "Tudy cesta nevede 🛑", 
+                "Smůla! 🤷‍♂️", 
+                "Chyť mě! 🏃‍♂️", 
+                "Nee! ❌", 
+                "Ale noo, snaž se 🥱"
+            ];
+            const randomText = texts[Math.floor(Math.random() * texts.length)];
+            btnNo.innerText = randomText;
+        }
+
+        // FÁZE 3: Kalendář integrovaný do tvého funkčního základu
+        function acceptPeace() {
+            const container = document.getElementById('mainContainer');
+            const btnNo = document.getElementById('btnNo');
+            if(btnNo) btnNo.remove();
+
+            // Zamezení výběru starých dat (nabídne dny od zítřka dál)
             const today = new Date();
             const tomorrow = new Date(today);
             tomorrow.setDate(tomorrow.getDate() + 1);
@@ -197,14 +245,15 @@
 
             container.innerHTML = `
                 <div class="datepicker-box">
-                    <p class="datepicker-instruction">Jeeej! Vyber si, kdy máš čas: 🥰🎉</p>
+                    <h2 style="color: #2ecc71; font-size: 1.8rem; margin-bottom: 5px;">Dohoda podepsána! 🎉🥳</h2>
+                    <p style="margin-bottom: 15px;">Skvěle. Teď stačí vybrat datum, kdy se ti to hodí a je to. 🤗✨</p>
                     <input type="date" id="dateInput" min="${tomorrowStr}" onchange="checkDate()">
                     <button id="btnSubmitDate" onclick="confirmFinalDate()" disabled>Potvrdit datum</button>
                 </div>
             `;
         }
 
-        // Kontrola, zda vybrala datum
+        // Odemknutí potvrzení po kliknutí do kalendáře
         function checkDate() {
             const dateInput = document.getElementById('dateInput');
             const btnSubmit = document.getElementById('btnSubmitDate');
@@ -216,20 +265,23 @@
             }
         }
 
-        // Závěrečná zpráva se screenshotem
+        // FÁZE 4: Finální hláška se screenshotem
         function confirmFinalDate() {
-            const container = document.getElementById('quizContainer');
+            const container = document.getElementById('mainContainer');
             const selectedDateValue = document.getElementById('dateInput').value;
             
+            // Převod na formát DD. MM. YYYY
             const dateParts = selectedDateValue.split('-');
             const formattedDate = `${dateParts[2]}. ${dateParts[1]}. ${dateParts[0]}`;
 
             container.innerHTML = `
-                <h2 style="color: #ff477e; font-size: 2.2rem; margin: 0; line-height: 1.4;">
-                    Super. Už se na tebe ${formattedDate} moc těším. 🥰👋
-                </h2>
-                <div class="screenshot-note">
-                    <strong>Udělej teď prosím screenshot</strong> této obrazovky a pošli mi ho na Insta, ať si to můžu zapsat do kalendáře! 📸✨
+                <div class="animate-box">
+                    <h2 style="color: #ff477e; font-size: 2rem; margin: 0; line-height: 1.4;">
+                        Super, platí! Už se na tebe teším ${formattedDate} moc těším. 🥰👋
+                    </h2>
+                    <div class="screenshot-note">
+                        <strong>Udělej teď prosím screenshot</strong> této obrazovky a pošli mi ho do zpráv, ať si to můžu zapsat do kalendáře!See ya 📸✨
+                    </div>
                 </div>
             `;
         }
