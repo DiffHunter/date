@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lepší zítřky </title>
+    <title>Lepší zítřky 🕊️✨</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -186,24 +186,24 @@
         function moveButton() {
             const btnNo = document.getElementById('btnNo');
             const btnYes = document.getElementById('btnYes');
-            
+             
             if (!btnYes) return;
-            
+             
             btnNo.style.position = 'fixed';
-            
+             
             const yesRect = btnYes.getBoundingClientRect();
-            
+             
             const btnWidth = btnNo.clientWidth;
             const btnHeight = btnNo.clientHeight;
-            
+             
             let randomX, randomY;
             let isOverlapping = true;
             let safetyBuffer = 40; 
-            
+             
             while (isOverlapping) {
                 randomX = Math.floor(Math.random() * (window.innerWidth - btnWidth));
                 randomY = Math.floor(Math.random() * (window.innerHeight - btnHeight));
-                
+                 
                 if (
                     randomX + btnWidth < yesRect.left - safetyBuffer || 
                     randomX > yesRect.right + safetyBuffer ||          
@@ -213,10 +213,10 @@
                     isOverlapping = false; 
                 }
             }
-            
+             
             btnNo.style.left = randomX + 'px';
             btnNo.style.top = randomY + 'px';
-            
+             
             // Náhodné texty (přidána tvoje nová hláška)
             const texts = [
                 "Tato možnost vypršela! 😜", 
@@ -231,23 +231,24 @@
             btnNo.innerText = randomText;
         }
 
-        // FÁZE 3: Kalendář integrovaný do tvého funkčního základu
+        // FÁZE 3: Kalendář od dnešního dne dál
         function acceptPeace() {
             const container = document.getElementById('mainContainer');
             const btnNo = document.getElementById('btnNo');
             if(btnNo) btnNo.remove();
 
-            // Zamezení výběru starých dat (nabídne dny od zítřka dál)
+            // Zamezení výběru starých dat - povolí výběr OD DNEŠKA dál
             const today = new Date();
-            const tomorrow = new Date(today);
-            tomorrow.setDate(tomorrow.getDate() + 1);
-            const tomorrowStr = tomorrow.toISOString().split('T')[0];
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
+            const todayStr = `${yyyy}-${mm}-${dd}`;
 
             container.innerHTML = `
                 <div class="datepicker-box">
                     <h2 style="color: #2ecc71; font-size: 1.8rem; margin-bottom: 5px;">Dohoda podepsána! 🎉🥳</h2>
                     <p style="margin-bottom: 15px;">Skvěle. Teď stačí vybrat datum, kdy se ti to hodí a je to. 🤗✨</p>
-                    <input type="date" id="dateInput" min="${tomorrowStr}" onchange="checkDate()">
+                    <input type="date" id="dateInput" min="${todayStr}" onchange="checkDate()">
                     <button id="btnSubmitDate" onclick="confirmFinalDate()" disabled>Potvrdit datum</button>
                 </div>
             `;
@@ -257,7 +258,7 @@
         function checkDate() {
             const dateInput = document.getElementById('dateInput');
             const btnSubmit = document.getElementById('btnSubmitDate');
-            
+             
             if (dateInput.value) {
                 btnSubmit.disabled = false;
             } else {
@@ -269,7 +270,7 @@
         function confirmFinalDate() {
             const container = document.getElementById('mainContainer');
             const selectedDateValue = document.getElementById('dateInput').value;
-            
+             
             // Převod na formát DD. MM. YYYY
             const dateParts = selectedDateValue.split('-');
             const formattedDate = `${dateParts[2]}. ${dateParts[1]}. ${dateParts[0]}`;
@@ -277,10 +278,10 @@
             container.innerHTML = `
                 <div class="animate-box">
                     <h2 style="color: #ff477e; font-size: 2rem; margin: 0; line-height: 1.4;">
-                        Super, platí! Už se na tebe teším ${formattedDate} moc těším. 🥰👋
+                        Super, platí! Už se na tebe ${formattedDate} moc těším. 🥰👋
                     </h2>
                     <div class="screenshot-note">
-                        <strong>Udělej teď prosím screenshot</strong> této obrazovky a pošli mi ho do zpráv, ať si to můžu zapsat do kalendáře!See ya 📸✨
+                        <strong>Udělej teď prosím screenshot</strong> této obrazovky a pošli mi ho do zpráv, ať si to můžu zapsat do kalendáře! See ya 📸✨
                     </div>
                 </div>
             `;
