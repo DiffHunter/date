@@ -1,291 +1,550 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lepší zítřky 🕊️</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #ffe5ec, #ffc2d1);
-            height: 100vh;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            overflow: hidden;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Juicy Vanilka 🎂</title>
 
-        .container {
-            background-color: white;
-            padding: 30px 40px;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            max-width: 450px;
-            width: 90%;
-            transition: all 0.3s ease;
-        }
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
 
-        h1 {
-            color: #ff477e;
-            margin-bottom: 20px;
-            font-size: 2rem;
-            line-height: 1.3;
-        }
+body{
+    background:linear-gradient(135deg,#ff7eb3,#ff758c,#a18cd1);
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow-x:hidden;
+    padding:20px 0;
+}
 
-        p {
-            color: #555;
-            font-size: 1.1rem;
-            line-height: 1.5;
-            margin-bottom: 25px;
-        }
+.screen{
+    display:none;
+    width:90%;
+    max-width:700px;
+    background:rgba(255,255,255,0.16);
+    backdrop-filter:blur(15px);
+    border-radius:25px;
+    padding:40px;
+    text-align:center;
+    color:white;
+    animation:fade .6s ease;
+    box-shadow:0 20px 60px rgba(0,0,0,.16);
+}
 
-        .buttons {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-            flex-wrap: wrap;
-            min-height: 60px;
-        }
+.screen.active{
+    display:block;
+}
 
-        button {
-            padding: 12px 30px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
+h1{
+    margin-bottom:20px;
+}
 
-        #btnNext {
-            background-color: #ff477e;
-            color: white;
-            box-shadow: 0 5px 15px rgba(255, 71, 126, 0.4);
-        }
+p{
+    line-height:1.7;
+    margin-bottom:20px;
+}
 
-        #btnNext:hover {
-            transform: scale(1.05);
-            background-color: #e03e6f;
-        }
+button{
+    background:white;
+    color:#ff4d8d;
+    border:none;
+    padding:15px 30px;
+    border-radius:50px;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:.25s;
+}
 
-        #btnYes {
-            background-color: #2ecc71;
-            color: white;
-            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
-        }
+button:hover{
+    transform:scale(1.04);
+}
 
-        #btnYes:hover {
-            transform: scale(1.05);
-            background-color: #27ae60;
-        }
+button:disabled{
+    opacity:.5;
+    cursor:not-allowed;
+    transform:none;
+}
 
-        #btnNo {
-            background-color: #e74c3c;
-            color: white;
-            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
-            transition: left 0.15s ease, top 0.15s ease, transform 0.2s ease;
-        }
+textarea{
+    width:100%;
+    height:140px;
+    border:none;
+    border-radius:15px;
+    padding:15px;
+    resize:none;
+    margin-top:10px;
+    font-size:16px;
+    outline:none;
+}
 
-        /* Nové styly pro kalendář v usmireni.html */
-        .datepicker-box {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            align-items: center;
-            animation: pop 0.5s ease;
-        }
+#puzzleBoard{
+    width:min(360px, 82vw);
+    aspect-ratio:1 / 1;
+    margin:25px auto;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    grid-template-rows:repeat(3,1fr);
+    gap:3px;
+    background:rgba(255,255,255,.25);
+    padding:3px;
+    border-radius:18px;
+    overflow:hidden;
+}
 
-        input[type="date"] {
-            border: 2px solid #ffc2d1;
-            border-radius: 12px;
-            background-color: #fff0f3;
-            color: #444;
-            padding: 15px;
-            font-size: 1.2rem;
-            width: calc(100% - 30px);
-            cursor: pointer;
-            outline: none;
-            transition: all 0.2s ease;
-        }
+.tile{
+    border:none;
+    border-radius:0;
+    padding:0;
+    width:100%;
+    height:100%;
+    background-image:url("puzzle.jpg");
+    background-size:300% 300%;
+    cursor:pointer;
+    position:relative;
+}
 
-        input[type="date"]:focus {
-            border-color: #ff477e;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(255, 71, 126, 0.1);
-        }
+.tile:hover{
+    transform:none;
+}
 
-        #btnSubmitDate {
-            background-color: #ff477e;
-            color: white;
-            margin-top: 10px;
-            padding: 12px 40px;
-            font-size: 1.1rem;
-            width: 100%;
-            border-radius: 50px;
-            box-shadow: 0 5px 15px rgba(255, 71, 126, 0.3);
-        }
+.tile.selected{
+    outline:4px solid white;
+    outline-offset:-4px;
+    filter:brightness(1.12);
+}
 
-        #btnSubmitDate:disabled {
-            background-color: #ccc;
-            box-shadow: none;
-            cursor: not-allowed;
-        }
+#puzzleMessage{
+    min-height:24px;
+    font-weight:bold;
+}
 
-        .screenshot-note {
-            font-size: 1.1rem;
-            color: #666;
-            margin-top: 20px;
-            background-color: #fff0f3;
-            padding: 15px;
-            border-radius: 10px;
-            border: 1px dashed #ff477e;
-            animation: pop 0.5s ease 0.3s backwards;
-        }
+@keyframes fade{
+    from{
+        opacity:0;
+        transform:translateY(20px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
 
-        .animate-box {
-            animation: pop 0.5s ease;
-        }
+.confetti{
+    position:fixed;
+    width:10px;
+    height:10px;
+    top:-20px;
+    z-index:9999;
+    animation:fall linear forwards;
+}
 
-        @keyframes pop {
-            0% { transform: scale(0.6); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-    </style>
+@keyframes fall{
+    to{
+        transform:translateY(110vh) rotate(720deg);
+    }
+}
+
+
+#cinemaDates{
+display:flex;
+justify-content:center;
+gap:12px;
+flex-wrap:wrap;
+margin-top:20px;
+}
+
+.dateBtn{
+background:white;
+color:#ff4d8d;
+border:none;
+padding:12px 18px;
+border-radius:30px;
+cursor:pointer;
+transition:.2s;
+}
+
+.dateBtn.selected{
+background:#ff4d8d;
+color:white;
+}
+
+#chosenDate{
+margin-top:20px;
+font-weight:bold;
+font-size:18px;
+}
+
+
+
+.hiddenMessage{
+display:none;
+margin-top:18px;
+padding:14px;
+background:rgba(255,255,255,.16);
+border-radius:15px;
+font-weight:bold;
+}
+
+.hiddenMessage.show{
+display:block;
+animation:fade .45s ease;
+}
+
+
+#copyAnswersBtn{
+margin-top:10px;
+}
+
+#copyStatus{
+font-weight:bold;
+}
+
+@media (max-width:600px){
+    .screen{
+        padding:28px 18px;
+    }
+
+    h1{
+        font-size:28px;
+    }
+
+    button{
+        width:100%;
+    }
+}
+</style>
 </head>
+
 <body>
 
-    <div class="container" id="mainContainer">
-        <!-- FÁZE 1: Úvodní hláška a tlačítko Dále -->
-        <div id="phase1" class="animate-box">
-            <h1>Dokážou se Pinďa a Juicy Vanilka vrátit k tomu hezkému?🤔🌸✨</h1>
-            <div class="buttons">
-                <button id="btnNext" onclick="goToPhase2()">Dále ➡️</button>
-            </div>
-        </div>
-    </div>
+<div class="screen active" id="intro">
 
-    <script>
-        function goToPhase2() {
-            const container = document.getElementById('mainContainer');
-            container.innerHTML = `
-                <div id="phase2" class="animate-box">
-                    <p style="margin-top: 10px;">Doufám, že ti čas, který jsi potřebovala pro sebe, pomohl. Mrzí mě, že mezi námi vznikla taková situace😔. Nechci se hádat ani se vracet k výčitkám... Rád bych tě znovu viděl.😁 Budu rád, když spolu zajdeme na kafe. Co ty na to?</p>
-                    <div class="buttons">
-                        <button id="btnYes" onclick="acceptPeace()">ANO, beru ☕</button>
-                        <button id="btnNo" onmouseover="moveButton()" onclick="moveButton()">NE 😤</button>
-                    </div>
-                </div>
-            `;
+<h1>🍦 Taak Juicy Vanilko 🍦</h1>
+
+<p>
+Dneska je ten den...<br>
+Oficiálně vstupuješ mezi nás staré mazáky. 😂
+</p>
+
+<p>
+Vítej v exkluzivním klubu pětadvacátníků.<br>
+Ale než budeš pokračovat dál, čeká tě pár úkolů. 😏
+</p>
+
+<button onclick="next('puzzle')">
+Jdu na to 🚀
+</button>
+
+</div>
+
+<div class="screen" id="puzzle">
+
+<h1>🧩 První úkol</h1>
+
+<p>
+Poskládej obrázek. Klikni na dva dílky a ony si prohodí místa.
+</p>
+
+<div id="puzzleBoard"></div>
+
+<p id="puzzleMessage"></p>
+
+<button onclick="next('selflove')" id="continueBtn" disabled>
+Pokračovat
+</button>
+
+</div>
+
+<div class="screen" id="selflove">
+
+<h1>❤️ Úkol č. 1</h1>
+
+<p>
+Napiš 3 věci, kterých si na sobě vážíš.
+</p>
+
+<textarea id="selfAnswer" placeholder="Např. jsem hodná, vtipná, odvážná..."></textarea>
+
+<br><br>
+
+<button onclick="goToSecondQuestion()">
+Pokračovat
+</button>
+
+</div>
+
+<div class="screen" id="mylove">
+
+<h1>😏 Úkol č. 2</h1>
+
+<p>
+A teď ta těžší část...
+</p>
+
+<p>
+Napiš 3 věci, které máš na mně ráda.
+</p>
+
+<textarea id="friendAnswer" placeholder="Tady očekávám samé hezké věci 😂"></textarea>
+
+<br><br>
+
+<button onclick="finish()">
+Hotovo
+</button>
+
+</div>
+
+<div class="screen" id="final">
+
+<h1>🎉 VŠECHNO NEJLEPŠÍ 🎉</h1>
+
+<p>
+Tak a je to...<br>
+Taak oficiálně ses zařadila mezi nás, zkušené veterány života. 😂❤️
+</p>
+
+<p>
+Přeju ti, aby ses pořád usmívála,byla zdráva, měla kolem sebe skvělé lidi a aby se ti plnilo všechno, co si přeješ.
+</p>
+
+<p>
+Samozřejmě ještě hodně zdravý, lásky a PENĚZ a taky méně lámaní se a více klidu a štěstí. Děkuju že jsi přesně taková, jaká jsi a kvůli nikomu jinému než sobě se neměň. ❤️
+</p>
+
+<h2 style="margin-top:25px">
+🍦 Všechno nejlepší, Juicy Vanilko! 🍦
+</h2>
+
+<br><br>
+
+<button onclick="next('cinema')">
+Ještě pokračuj 🎁
+</button>
+
+
+
+</div>
+
+
+<div class="screen" id="cinema">
+
+<h1>🎁 A ještě můj dárek pro tebe</h1>
+
+<p>
+Místo nějaké další blbosti na poličku bych tě radši vzal do kina na
+<b>Spider-Mana</b>. 🍿🕷️
+</p>
+
+<p>
+Vyber si den, který se ti bude nejvíc hodit.
+</p>
+
+<div id="cinemaDates">
+<button class="dateBtn">31. 7.</button>
+<button class="dateBtn">1. 8.</button>
+<button class="dateBtn">2. 8.</button>
+<button class="dateBtn">3. 8.</button>
+<button class="dateBtn">4. 8.</button>
+</div>
+
+<p id="chosenDate"></p>
+
+<p id="screenshotInfo" class="hiddenMessage">
+A teď si prosím udělej screenshot téhle obrazovky a pošli mi ho,
+ať vím, který den sis vybrala. 😁
+</p>
+
+<button id="copyAnswersBtn" class="hiddenMessage" type="button" onclick="copyAnswers()">
+📋 Zkopírovat odpovědi
+</button>
+
+<p id="copyStatus" class="hiddenMessage">
+Teď mi to jen vlož a pošli na Instagram. 😁
+</p>
+
+</div>
+
+<script>
+function next(id){
+    document.querySelectorAll('.screen')
+        .forEach(s => s.classList.remove('active'));
+
+    document.getElementById(id)
+        .classList.add('active');
+
+    window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function goToSecondQuestion(){
+    const value = document.getElementById('selfAnswer').value.trim();
+
+    if(!value){
+        alert('Nejdřív něco napiš. 😄');
+        return;
+    }
+
+    localStorage.setItem('selfAnswer', value);
+    next('mylove');
+}
+
+function finish(){
+    const value = document.getElementById('friendAnswer').value.trim();
+
+    if(!value){
+        alert('Tady taky něco napiš. 😄');
+        return;
+    }
+
+    localStorage.setItem('friendAnswer', value);
+    next('final');
+
+    for(let i=0;i<180;i++){
+        const conf=document.createElement('div');
+        conf.classList.add('confetti');
+        conf.style.left=Math.random()*100+"vw";
+        conf.style.background=`hsl(${Math.random()*360},100%,50%)`;
+        conf.style.animationDuration=(3+Math.random()*3)+"s";
+        conf.style.animationDelay=(Math.random()*0.6)+"s";
+        document.body.appendChild(conf);
+
+        setTimeout(()=>conf.remove(),7000);
+    }
+}
+
+/* Puzzle */
+const board = document.getElementById('puzzleBoard');
+const continueBtn = document.getElementById('continueBtn');
+const puzzleMessage = document.getElementById('puzzleMessage');
+
+let order = [...Array(9).keys()];
+let selectedIndex = null;
+
+function shufflePuzzle(){
+    do{
+        order.sort(() => Math.random() - 0.5);
+    }while(order.every((value,index)=>value===index));
+
+    renderPuzzle();
+}
+
+function renderPuzzle(){
+    board.innerHTML='';
+
+    order.forEach((pieceNumber, positionIndex)=>{
+        const tile=document.createElement('button');
+        tile.className='tile';
+        tile.type='button';
+        tile.setAttribute('aria-label', `Dílek ${positionIndex + 1}`);
+
+        const row=Math.floor(pieceNumber/3);
+        const col=pieceNumber%3;
+        tile.style.backgroundPosition=`${col*50}% ${row*50}%`;
+
+        if(selectedIndex===positionIndex){
+            tile.classList.add('selected');
         }
 
-        // Šílené létání všude možně s ochranou proti překrytí 
-        function moveButton() {
-            const btnNo = document.getElementById('btnNo');
-            const btnYes = document.getElementById('btnYes');
-            
-            if (!btnYes) return;
-            
-            btnNo.style.position = 'fixed';
-            
-            const yesRect = btnYes.getBoundingClientRect();
-            
-            const btnWidth = btnNo.clientWidth;
-            const btnHeight = btnNo.clientHeight;
-            
-            let randomX, randomY;
-            let isOverlapping = true;
-            let safetyBuffer = 40; 
-            
-            while (isOverlapping) {
-                randomX = Math.floor(Math.random() * (window.innerWidth - btnWidth));
-                randomY = Math.floor(Math.random() * (window.innerHeight - btnHeight));
-                
-                if (
-                    randomX + btnWidth < yesRect.left - safetyBuffer || 
-                    randomX > yesRect.right + safetyBuffer ||          
-                    randomY + btnHeight < yesRect.top - safetyBuffer ||  
-                    randomY > yesRect.bottom + safetyBuffer             
-                ) {
-                    isOverlapping = false; 
-                }
-            }
-            
-            btnNo.style.left = randomX + 'px';
-            btnNo.style.top = randomY + 'px';
-            
-            // Náhodné texty 
-            const texts = [
-                "Tato možnost vypršela! 😜", 
-                "Zkus kliknout vedle! 👇", 
-                "Tudy cesta nevede 🛑", 
-                "Smůla! 🤷‍♂️", 
-                "Chyť mě! 🏃‍♂️", 
-                "Nee! ❌", 
-                "Ale noo, snaž se 🥱"
-            ];
-            const randomText = texts[Math.floor(Math.random() * texts.length)];
-            btnNo.innerText = randomText;
-        }
+        tile.addEventListener('click',()=>{
+            handleTileClick(positionIndex);
+        });
 
-        // FÁZE 3: Kalendář integrovaný do tvého funkčního základu
-        function acceptPeace() {
-            const container = document.getElementById('mainContainer');
-            const btnNo = document.getElementById('btnNo');
-            if(btnNo) btnNo.remove();
+        board.appendChild(tile);
+    });
+}
 
-            // Zamezení výběru starých dat (nabídne dny od zítřka dál)
-            const today = new Date();
-            const tomorrow = new Date(today);
-            tomorrow.setDate(tomorrow.getDate() + 1);
-            const tomorrowStr = tomorrow.toISOString().split('T')[0];
+function handleTileClick(index){
+    if(selectedIndex===null){
+        selectedIndex=index;
+        puzzleMessage.textContent='Teď vyber druhý dílek.';
+        renderPuzzle();
+        return;
+    }
 
-            container.innerHTML = `
-                <div class="datepicker-box">
-                    <h2 style="color: #2ecc71; font-size: 1.8rem; margin-bottom: 5px;">Mírová dohoda podepsána! 🎉🥳</h2>
-                    <p style="margin-bottom: 15px;">Skvěle. Teď stačí vybrat datum, kdy se ti to hodí a je to. 🤗✨</p>
-                    <input type="date" id="dateInput" min="${tomorrowStr}" onchange="checkDate()">
-                    <button id="btnSubmitDate" onclick="confirmFinalDate()" disabled>Potvrdit datum</button>
-                </div>
-            `;
-        }
+    if(selectedIndex===index){
+        selectedIndex=null;
+        puzzleMessage.textContent='';
+        renderPuzzle();
+        return;
+    }
 
-        // Odemknutí potvrzení po kliknutí do kalendáře
-        function checkDate() {
-            const dateInput = document.getElementById('dateInput');
-            const btnSubmit = document.getElementById('btnSubmitDate');
-            
-            if (dateInput.value) {
-                btnSubmit.disabled = false;
-            } else {
-                btnSubmit.disabled = true;
-            }
-        }
+    [order[selectedIndex],order[index]]=[order[index],order[selectedIndex]];
+    selectedIndex=null;
+    renderPuzzle();
+    checkPuzzle();
+}
 
-        // FÁZE 4: Finální hláška se screenshotem
-        function confirmFinalDate() {
-            const container = document.getElementById('mainContainer');
-            const selectedDateValue = document.getElementById('dateInput').value;
-            
-            // Převod na formát DD. MM. YYYY
-            const dateParts = selectedDateValue.split('-');
-            const formattedDate = `${dateParts[2]}. ${dateParts[1]}. ${dateParts[0]}`;
+function checkPuzzle(){
+    const solved=order.every((value,index)=>value===index);
 
-            container.innerHTML = `
-                <div class="animate-box">
-                    <h2 style="color: #ff477e; font-size: 2rem; margin: 0; line-height: 1.4;">
-                        Super, platí! Už se na to naše kafe ${formattedDate} moc těším. 🥰👋
-                    </h2>
-                    <div class="screenshot-note">
-                        <strong>Udělej teď prosím screenshot</strong> této obrazovky a pošli mi ho do zpráv, ať si to můžu zapsat do kalendáře!See ya 📸✨
-                    </div>
-                </div>
-            `;
-        }
-    </script>
+    if(solved){
+        continueBtn.disabled=false;
+        puzzleMessage.textContent='Hotovo! Můžeš pokračovat. 😁';
+    }else{
+        continueBtn.disabled=true;
+        puzzleMessage.textContent='';
+    }
+}
+
+shufflePuzzle();
+
+document.querySelectorAll(".dateBtn").forEach(btn=>{
+btn.addEventListener("click",()=>{
+document.querySelectorAll(".dateBtn").forEach(b=>b.classList.remove("selected"));
+btn.classList.add("selected");
+
+document.getElementById("chosenDate").innerHTML =
+"❤️ Tak jo, máme domluveno! <b>"+btn.innerText+"</b> jdeme na Spider‑Mana. 🍿";
+
+localStorage.setItem("cinemaDate", btn.innerText);
+
+document.getElementById("screenshotInfo").classList.add("show");
+document.getElementById("copyAnswersBtn").classList.add("show");
+});
+});
+
+async function copyAnswers(){
+const selfAnswer = localStorage.getItem("selfAnswer") || "Neuvedeno";
+const friendAnswer = localStorage.getItem("friendAnswer") || "Neuvedeno";
+const cinemaDate = localStorage.getItem("cinemaDate") || "Nevybráno";
+
+const message =
+`❤️ Odpovědi Juicy Vanilky ❤️
+
+Na sobě si vážím:
+${selfAnswer}
+
+Na tobě mám ráda:
+${friendAnswer}
+
+Do kina na Spider-Mana chci jít:
+${cinemaDate}`;
+
+try{
+await navigator.clipboard.writeText(message);
+document.getElementById("copyStatus").classList.add("show");
+document.getElementById("copyAnswersBtn").textContent = "✅ Zkopírováno";
+}catch(error){
+const temp = document.createElement("textarea");
+temp.value = message;
+document.body.appendChild(temp);
+temp.select();
+document.execCommand("copy");
+temp.remove();
+
+document.getElementById("copyStatus").classList.add("show");
+document.getElementById("copyAnswersBtn").textContent = "✅ Zkopírováno";
+}
+}
+
+</script>
 
 </body>
 </html>
