@@ -197,6 +197,15 @@ display:block;
 animation:fade .45s ease;
 }
 
+
+#copyAnswersBtn{
+margin-top:10px;
+}
+
+#copyStatus{
+font-weight:bold;
+}
+
 @media (max-width:600px){
     .screen{
         padding:28px 18px;
@@ -353,6 +362,14 @@ A teď si prosím udělej screenshot téhle obrazovky a pošli mi ho,
 ať vím, který den sis vybrala. 😁
 </p>
 
+<button id="copyAnswersBtn" class="hiddenMessage" type="button" onclick="copyAnswers()">
+📋 Zkopírovat odpovědi
+</button>
+
+<p id="copyStatus" class="hiddenMessage">
+Teď mi to jen vlož a pošli na Instagram. 😁
+</p>
+
 </div>
 
 <script>
@@ -486,9 +503,46 @@ btn.classList.add("selected");
 document.getElementById("chosenDate").innerHTML =
 "❤️ Tak jo, máme domluveno! <b>"+btn.innerText+"</b> jdeme na Spider‑Mana. 🍿";
 
+localStorage.setItem("cinemaDate", btn.innerText);
+
 document.getElementById("screenshotInfo").classList.add("show");
+document.getElementById("copyAnswersBtn").classList.add("show");
 });
 });
+
+async function copyAnswers(){
+const selfAnswer = localStorage.getItem("selfAnswer") || "Neuvedeno";
+const friendAnswer = localStorage.getItem("friendAnswer") || "Neuvedeno";
+const cinemaDate = localStorage.getItem("cinemaDate") || "Nevybráno";
+
+const message =
+`❤️ Odpovědi Juicy Vanilky ❤️
+
+Na sobě si vážím:
+${selfAnswer}
+
+Na tobě mám ráda:
+${friendAnswer}
+
+Do kina na Spider-Mana chci jít:
+${cinemaDate}`;
+
+try{
+await navigator.clipboard.writeText(message);
+document.getElementById("copyStatus").classList.add("show");
+document.getElementById("copyAnswersBtn").textContent = "✅ Zkopírováno";
+}catch(error){
+const temp = document.createElement("textarea");
+temp.value = message;
+document.body.appendChild(temp);
+temp.select();
+document.execCommand("copy");
+temp.remove();
+
+document.getElementById("copyStatus").classList.add("show");
+document.getElementById("copyAnswersBtn").textContent = "✅ Zkopírováno";
+}
+}
 
 </script>
 
